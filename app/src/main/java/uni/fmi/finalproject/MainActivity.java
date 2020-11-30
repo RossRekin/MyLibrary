@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
                     Book book = new Book(bookName,bookAuthor,bookIsbn);
                     dbHelper.createBook(book);
                     Toast.makeText(MainActivity.this,"Book Added Successfully",Toast.LENGTH_LONG).show();
+                    bookNameET.setText("");
+                    bookAuthorET.setText("");
+                    bookIsbnET.setText("");
 
                 }
             }

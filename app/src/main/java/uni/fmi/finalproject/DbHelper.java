@@ -161,4 +161,34 @@ public class DbHelper extends SQLiteOpenHelper {
         return books;
     }
 
+    public void updateBook(Book book){
+        SQLiteDatabase db = null;
+        try {
+            db = getWritableDatabase();
+
+            ContentValues cv = new ContentValues();
+            cv.put(BOOK_COLUMN_NAME, book.getName());
+            cv.put(BOOK_COLUMN_AUTHOR, book.getAuthor());
+            cv.put(BOOK_COLUMN_ISBN,book.getIsbn());
+            db.update(TABLE_BOOK,cv,BOOK_COLUMN_ID + " = ?",new String[]{String.valueOf(book.getId())});
+        }catch (SQLException e){
+            Log.wtf(ERROR_TAG,e.getMessage());
+        }finally {
+            if (db!=null) db.close();
+        }
+
+    }
+
+    public void deleteBook(Book book){
+        SQLiteDatabase db = null;
+        try {
+            db = getWritableDatabase();
+            db.delete(TABLE_BOOK,BOOK_COLUMN_ID + " = ? ",new String[]{String.valueOf(book.getId())});
+        }catch (SQLException e){
+            Log.wtf(ERROR_TAG,e.getMessage());
+        }finally {
+            if (db!=null) db.close();
+        }
+    }
+
 }

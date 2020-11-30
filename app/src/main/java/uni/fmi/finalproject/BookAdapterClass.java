@@ -1,5 +1,6 @@
 package uni.fmi.finalproject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,12 +37,35 @@ public class BookAdapterClass extends RecyclerView.Adapter<BookAdapterClass.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Book book = books.get(position);
 
-        holder.bookNameTV.setText(book.getName());
-        holder.bookAuthorTV.setText(book.getAuthor());
-        holder.bookIsbnTV.setText(book.getIsbn());
+        holder.bookNameET.setText(book.getName());
+        holder.bookAuthorET.setText(book.getAuthor());
+        holder.bookIsbnET.setText(book.getIsbn());
+
+        holder.editB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String bookName= holder.bookNameET.getText().toString();
+                String bookAuthor= holder.bookAuthorET.getText().toString();
+                String bookIsbn= holder.bookIsbnET.getText().toString();
+                Book newBook = new Book(book.getId(),bookName,bookAuthor,bookIsbn);
+                dbHelper.updateBook(newBook);
+                notifyDataSetChanged();
+                ((Activity) context).finish();
+                context.startActivity(((Activity) context).getIntent());
+            }
+        });
+
+        holder.deleteB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.deleteBook(book);
+                books.remove(position);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -50,18 +74,18 @@ public class BookAdapterClass extends RecyclerView.Adapter<BookAdapterClass.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView bookNameTV;
-        TextView bookAuthorTV;
-        TextView bookIsbnTV;
+        TextView bookNameET;
+        TextView bookAuthorET;
+        TextView bookIsbnET;
         Button editB;
         Button deleteB;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            bookNameTV =itemView.findViewById(R.id.listNameEditText);
-            bookAuthorTV =itemView.findViewById(R.id.listAuthorEditText);
-            bookIsbnTV =itemView.findViewById(R.id.listIsbnEditText);
+            bookNameET =itemView.findViewById(R.id.listNameEditText);
+            bookAuthorET =itemView.findViewById(R.id.listAuthorEditText);
+            bookIsbnET =itemView.findViewById(R.id.listIsbnEditText);
             editB= itemView.findViewById(R.id.editBookButton);
             deleteB= itemView.findViewById(R.id.deleteBookButton);
         }
